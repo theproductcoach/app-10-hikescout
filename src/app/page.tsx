@@ -22,6 +22,14 @@ interface HikeResponse {
   foodStops: string;
   returnOptions: string;
   tips: string;
+  carpark?: {
+    description: string;
+    mapsLink: string;
+  };
+  trailhead?: {
+    description: string;
+    mapsLink: string;
+  };
   weather?: {
     temperature: number;
     description: string;
@@ -413,19 +421,14 @@ export default function Home() {
                   type="submit"
                   className={styles.button}
                   disabled={loading}
+                  onClick={surpriseMode ? handleSurpriseMe : undefined}
                 >
-                  {loading ? "Finding your perfect hike..." : "Find My Hike"}
+                  {loading
+                    ? "Finding your perfect hike..."
+                    : surpriseMode
+                    ? "Surprise Me!"
+                    : "Find My Hike"}
                 </button>
-                {!surpriseMode && (
-                  <button
-                    type="button"
-                    onClick={handleSurpriseMe}
-                    className={styles.surpriseButton}
-                    disabled={loading}
-                  >
-                    {loading ? "Generating..." : "Surprise Me!"}
-                  </button>
-                )}
               </div>
               <button
                 type="button"
@@ -468,17 +471,40 @@ export default function Home() {
                 <div className={styles.responseSection}>
                   <h3>📍 Location</h3>
                   <p>{hikeResponse.location}</p>
-                  <a
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(
-                      hikeResponse.location
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.mapsLink}
-                  >
-                    <span>🗺️</span>
-                    <span>View on Google Maps</span>
-                  </a>
+                  {hikeResponse.carpark && (
+                    <div className={styles.locationLink}>
+                      <h4>🅿️ Carpark</h4>
+                      <p>{hikeResponse.carpark.description}</p>
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(
+                          hikeResponse.carpark.description
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.mapsLink}
+                      >
+                        <span>🗺️</span>
+                        <span>View Carpark on Google Maps</span>
+                      </a>
+                    </div>
+                  )}
+                  {hikeResponse.trailhead && (
+                    <div className={styles.locationLink}>
+                      <h4>🥾 Trailhead</h4>
+                      <p>{hikeResponse.trailhead.description}</p>
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(
+                          hikeResponse.trailhead.description
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.mapsLink}
+                      >
+                        <span>🗺️</span>
+                        <span>View Trailhead on Google Maps</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
                 {hikeResponse.weather && (
                   <div className={styles.responseSection}>

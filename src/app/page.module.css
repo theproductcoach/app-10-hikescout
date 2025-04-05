@@ -494,41 +494,20 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.8rem;
-  padding: 0.75rem 1.2rem;
+  padding: 0.5rem 1rem;
   background-color: #2d5a27;
-  background-image: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.1),
-      rgba(0, 0, 0, 0.1));
   color: white;
-  border-radius: 8px;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(45, 90, 39, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
 }
 
 .mapsLink:hover {
   background-color: #366c2e;
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    0 8px 16px rgba(45, 90, 39, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  filter: brightness(1.1);
-}
-
-.mapsLink:active {
-  transform: translateY(1px);
-  filter: brightness(0.95);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .difficultyText {
@@ -643,11 +622,12 @@
   margin: 0 1rem;
   flex-shrink: 0;
   text-align: center;
+  margin-top: -1.1rem;
 }
 
 .useLocationButton {
   padding: 0.75rem 1.2rem;
-  background-color: #2d5a27;
+  background-color: #0D9488;
   color: white;
   border: none;
   border-radius: 8px;
@@ -657,39 +637,40 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
     white-space: nowrap;
     background-image: linear-gradient(to bottom,
         rgba(255, 255, 255, 0.1),
         rgba(0, 0, 0, 0.1));
     box-shadow:
       0 2px 4px rgba(0, 0, 0, 0.1),
-      0 4px 8px rgba(45, 90, 39, 0.2),
+    0 4px 8px rgba(13, 148, 136, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    height: 42px;
-    flex-shrink: 0;
-  }
-  
-  .useLocationButton:hover {
-    background-color: #366c2e;
+      height: 40px;
+      flex-shrink: 0;
+  margin-top: -0.9rem;
+}
+
+.useLocationButton:hover {
+  background-color: #0F766E;
     transform: translateY(-2px);
     box-shadow:
       0 4px 8px rgba(0, 0, 0, 0.15),
-      0 8px 16px rgba(45, 90, 39, 0.2),
+    0 8px 16px rgba(13, 148, 136, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    filter: brightness(1.1);
-  }
-  
-  .useLocationButton:active {
-    transform: translateY(1px);
-    filter: brightness(0.95);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  
-  .useLocationButton:disabled {
-    background-color: #7c8c7a;
+      filter: brightness(1.1);
+      }
+      
+      .useLocationButton:active {
+        transform: translateY(1px);
+        filter: brightness(0.95);
+        box-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      
+      .useLocationButton:disabled {
+  background-color: #99F6E4;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -786,4 +767,22 @@ input:checked+.slider:before {
   transform: translateX(26px);
 }
 }
+}
+.locationLink {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.locationLink h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #2d5a27;
+}
+
+.locationLink p {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
 }
