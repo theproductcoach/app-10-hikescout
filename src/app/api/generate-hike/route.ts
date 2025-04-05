@@ -37,7 +37,15 @@ Please recommend ${vibeContext}.
 Please provide a response in JSON format with the following structure:
 {
   "name": "Name of the hike",
-  "location": "Specific location and starting point",
+  "location": "General area of the hike",
+  "carpark": {
+    "description": "Description and directions to the main car park",
+    "mapsLink": "Google Maps link to the car park location"
+  },
+  "trailhead": {
+    "description": "Description and directions to the trailhead starting point",
+    "mapsLink": "Google Maps link to the trailhead location"
+  },
   "transport": "Detailed transport instructions from ${startLocation}",
   "description": "Description of the hike and surroundings, emphasizing aspects that match the desired ${vibe} vibe",
   "difficulty": "Easy/Moderate/Hard",
