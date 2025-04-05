@@ -16,6 +16,7 @@
   font-family: var(--font-geist-sans);
 }
 
+/* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   .page {
     --gray-rgb: 255, 255, 255;
@@ -25,14 +26,19 @@
     --button-primary-hover: #ccc;
     --button-secondary-hover: #1a1a1a;
   }
+.logo {
+  filter: invert();
+}
 }
 
+/* Main layout styles */
 .main {
   min-height: 100vh;
   width: 100%;
   position: relative;
 }
 
+/* Hero section styles */
 .hero {
   position: relative;
   height: 100vh;
@@ -84,6 +90,7 @@
   transform: translateY(-2px);
 }
 
+/* Form section styles */
 .formSection {
   position: relative;
   min-height: 100vh;
@@ -123,6 +130,7 @@
   padding: 2.5rem;
 }
 
+/* Form styles */
 .form {
   background: transparent;
   padding: 1rem;
@@ -180,6 +188,91 @@
   background: rgba(255, 255, 255, 0.95);
 }
 
+/* Surprise toggle styles */
+.surpriseModeToggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.surpriseModeToggle:hover {
+  background-color: #f1f5f9;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  width: 3.5rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  position: relative;
+  width: 3.5rem;
+  height: 2rem;
+  appearance: none;
+  background-color: #e2e8f0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.switch input:checked {
+  background-color: #2d5a27;
+}
+
+.switch input::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.switch input:checked::before {
+  left: calc(100% - 1.75rem);
+}
+
+.switch input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(45, 90, 39, 0.2);
+}
+
+.switch:hover input::before {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Remove the old slider styles */
+.slider {
+  display: none;
+}
+
+/* Button styles */
 .buttonContainer {
   display: flex;
   flex-direction: column;
@@ -187,12 +280,12 @@
   margin-top: 2.5rem;
   width: 100%;
   align-items: center;
-  }
-  
-  .mainButtons {
-    display: flex;
-    gap: 1rem;
-    width: 100%;
+}
+
+.mainButtons {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
 }
 
 .button {
@@ -217,52 +310,17 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.surpriseButton {
-  flex: 1;
-  padding: 1.1rem;
-  background-color: #8b4513;
-  background-image: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.1),
-      rgba(0, 0, 0, 0.1));
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 150px;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(139, 69, 19, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.button:hover,
-.surpriseButton:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
-
 .button:hover {
   background-color: #366c2e;
+  transform: translateY(-2px);
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.15),
     0 8px 16px rgba(45, 90, 39, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.1);
 }
 
-.surpriseButton:hover {
-  background-color: #a0522d;
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    0 8px 16px rgba(139, 69, 19, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.button:active,
-.surpriseButton:active {
+.button:active {
   transform: translateY(1px);
   filter: brightness(0.95);
   box-shadow:
@@ -270,8 +328,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.button:disabled,
-.surpriseButton:disabled {
+.button:disabled {
   background-color: #7c8c7a;
   background-image: none;
   cursor: not-allowed;
@@ -280,6 +337,35 @@
   opacity: 0.7;
 }
 
+.buttonBlue {
+  background-color: #2d5a27;
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.1),
+      rgba(0, 0, 0, 0.1));
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(45, 90, 39, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.buttonBlue:hover {
+  background-color: #366c2e;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 8px 16px rgba(45, 90, 39, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.1);
+}
+
+.buttonBlue:active {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Clear button styles */
 .clearButton {
   padding: 0.8rem 1.5rem;
   background-color: #3498db;
@@ -332,6 +418,7 @@
   transform: none;
   box-shadow: none;
 }
+/* Response section styles */
 .response {
   background: rgba(255, 255, 255, 0.95);
   padding: 2rem;
@@ -374,6 +461,7 @@
 .photoCredit a:hover {
   text-decoration: underline;
 }
+
 .responseSection {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
@@ -406,41 +494,20 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.8rem;
-  padding: 0.75rem 1.2rem;
+  padding: 0.5rem 1rem;
   background-color: #2d5a27;
-  background-image: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.1),
-      rgba(0, 0, 0, 0.1));
   color: white;
-  border-radius: 8px;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(45, 90, 39, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
 }
 
 .mapsLink:hover {
   background-color: #366c2e;
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    0 8px 16px rgba(45, 90, 39, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  filter: brightness(1.1);
-}
-
-.mapsLink:active {
-  transform: translateY(1px);
-  filter: brightness(0.95);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .difficultyText {
@@ -448,76 +515,8 @@
   padding-top: 0.5rem;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
-.ctas {
-  display: flex;
-  gap: 16px;
-}
 
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
-}
-
-a.primary {
-  background: var(--foreground);
-  color: var(--background);
-  gap: 8px;
-}
-
-a.secondary {
-  border-color: var(--gray-alpha-200);
-  min-width: 158px;
-}
-
-.footer {
-  grid-row-start: 3;
-  display: flex;
-  gap: 24px;
-}
-
-.footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer img {
-  flex-shrink: 0;
-}
-
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
-
+/* Mobile styles */
 @media (max-width: 600px) {
   .page {
     padding: 32px;
@@ -568,38 +567,222 @@ a.secondary {
     font-size: 1rem;
   }
 
-  .ctas {
+                                .buttonContainer {
+                                  flex-direction: column;
+                                  gap: 0.75rem;
+                                }
+                
+                                .mainButtons {
     flex-direction: column;
+    width: 100%;
+    }
+    }
+    
+    /* Form field animations */
+    .formFieldsContainer {
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .formFieldsContainer.hidden {
+      max-height: 0;
+      opacity: 0;
+      margin: 0;
+      transform: translateY(-20px);
+    }
+    
+    .formFieldsContainer.visible {
+      max-height: 1000px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Location input container */
+    .locationContainer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .locationInputGroup {
+      flex: 1;
+      min-width: 0;
+      /* Prevents flex item from overflowing */
+}
+
+.locationInputGroup .formGroup {
+  margin-bottom: 0;
+}
+
+.locationSeparator {
+  color: #888888;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 1rem;
+  flex-shrink: 0;
+  text-align: center;
+  margin-top: -1.1rem;
+}
+
+.useLocationButton {
+  padding: 0.75rem 1.2rem;
+  background-color: #0D9488;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+    white-space: nowrap;
+    background-image: linear-gradient(to bottom,
+        rgba(255, 255, 255, 0.1),
+        rgba(0, 0, 0, 0.1));
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(13, 148, 136, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      height: 40px;
+      flex-shrink: 0;
+  margin-top: -0.9rem;
+}
+
+.useLocationButton:hover {
+  background-color: #0F766E;
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 8px rgba(0, 0, 0, 0.15),
+    0 8px 16px rgba(13, 148, 136, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      filter: brightness(1.1);
+      }
+      
+      .useLocationButton:active {
+        transform: translateY(1px);
+        filter: brightness(0.95);
+        box-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      
+      .useLocationButton:disabled {
+  background-color: #99F6E4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+  
+  .locationError {
+    color: #e53e3e;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
   }
 
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .buttonContainer {
+@media (max-width: 640px) {
+  .locationContainer {
     flex-direction: column;
+    align-items: stretch;
     gap: 0.75rem;
   }
-.mainButtons {
-  flex-direction: column;
-  width: 100%;
-}
+.locationSeparator {
+  margin: 0.25rem 0;
+  text-align: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
+.useLocationButton {
+  width: 100%;
+  .surpriseModeToggle {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+  
+    .toggleLabel {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #2d5a27;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      flex-shrink: 0;
+    }
+  
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+  
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+  
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+}
+input:checked+.slider {
+  background-color: #2d5a27;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #2d5a27;
+}
+input:checked+.slider:before {
+  transform: translateX(26px);
+}
+}
+}
+.locationLink {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.locationLink h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #2d5a27;
+}
+
+.locationLink p {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
 }

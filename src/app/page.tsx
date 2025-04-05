@@ -22,6 +22,14 @@ interface HikeResponse {
   foodStops: string;
   returnOptions: string;
   tips: string;
+  carpark?: {
+    description: string;
+    mapsLink: string;
+  };
+  trailhead?: {
+    description: string;
+    mapsLink: string;
+  };
   weather?: {
     temperature: number;
     description: string;
@@ -56,7 +64,61 @@ export default function Home() {
   });
   const [hikeResponse, setHikeResponse] = useState<HikeResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [locationError, setLocationError] = useState<string>("");
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const [surpriseMode, setSurpriseMode] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+
+  const handleGetLocation = () => {
+    setGettingLocation(true);
+    setLocationError("");
+
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser");
+      setGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const response = await fetch(
+            `/api/reverse-geocode?lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+          );
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            startLocation: data.address,
+          }));
+        } catch (error) {
+          setLocationError(
+            "Could not determine your location. Please enter it manually."
+          );
+          console.error("Geocoding error:", error);
+        } finally {
+          setGettingLocation(false);
+        }
+      },
+      (error) => {
+        setLocationError(
+          error.code === 1
+            ? "Location access was denied. Please enable location services or enter your location manually."
+            : "Could not determine your location. Please try again or enter it manually."
+        );
+        setGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+  };
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -219,104 +281,139 @@ export default function Home() {
       <section ref={formRef} className={styles.formSection}>
         <div className={styles.formBackground} />
         <div className={styles.formContainer}>
+          <div className={styles.surpriseModeToggle}>
+            <label className={styles.toggleLabel}>
+              <div className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={surpriseMode}
+                  onChange={(e) => setSurpriseMode(e.target.checked)}
+                />
+              </div>
+              <span>🎲 Surprise Me with a Hike Near My Location</span>
+            </label>
+          </div>
+
           <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label htmlFor="startLocation">
-                Where are you starting from?*
-              </label>
-              <input
-                type="text"
-                id="startLocation"
-                name="startLocation"
-                placeholder="Enter any address, city, station, or landmark"
-                value={formData.startLocation}
-                onChange={handleInputChange}
-                required
-              />
-              <span className={styles.helperText}>
-                Try something like "Kings Cross Station" or "Manchester City
-                Centre"
-              </span>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="duration">How long would you like to hike?</label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                placeholder="e.g. 4 hours or 10km"
-                value={formData.duration}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="distance">
-                How far are you willing to travel?
-              </label>
-              <input
-                type="text"
-                id="distance"
-                name="distance"
-                placeholder="e.g. 1 hour by train or 50 miles"
-                value={formData.distance}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="terrain">
-                What type of terrain do you prefer?
-              </label>
-              <select
-                id="terrain"
-                name="terrain"
-                value={formData.terrain}
-                onChange={handleInputChange}
-                required
+            <div className={styles.locationContainer}>
+              <div className={styles.locationInputGroup}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="startLocation">
+                    Where are you starting from?*
+                  </label>
+                  <input
+                    type="text"
+                    id="startLocation"
+                    name="startLocation"
+                    placeholder="Enter any address, city, station, or landmark"
+                    value={formData.startLocation}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <span className={styles.helperText}>
+                    Try something like "Kings Cross Station" or "Manchester City
+                    Centre"
+                  </span>
+                  {locationError && (
+                    <div className={styles.locationError}>{locationError}</div>
+                  )}
+                </div>
+              </div>
+              <div className={styles.locationSeparator}>or</div>
+              <button
+                type="button"
+                className={styles.useLocationButton}
+                onClick={handleGetLocation}
+                disabled={gettingLocation}
               >
-                <option value="">Select terrain type</option>
-                <option value="woodland">Woodland</option>
-                <option value="hills">Hills</option>
-                <option value="coast">Coast</option>
-                <option value="mixed">Mixed</option>
-              </select>
+                {gettingLocation ? "Getting Location..." : "📍 Use My Location"}
+              </button>
             </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="vibe">Vibe of the Hike</label>
-              <select
-                id="vibe"
-                name="vibe"
-                value={formData.vibe}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select the vibe you want</option>
-                {vibeTypes.map((vibe) => (
-                  <option key={vibe} value={vibe}>
-                    {vibe}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {!surpriseMode && (
+              <>
+                <div className={styles.formGroup}>
+                  <label htmlFor="duration">
+                    How long would you like to hike?
+                  </label>
+                  <input
+                    type="text"
+                    id="duration"
+                    name="duration"
+                    placeholder="e.g. 4 hours or 10km"
+                    value={formData.duration}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
 
-            <div className={styles.formGroup}>
-              <label htmlFor="foodPreference">
-                Any food or coffee preferences?
-              </label>
-              <input
-                type="text"
-                id="foodPreference"
-                name="foodPreference"
-                placeholder="e.g. Pub lunch, coffee shop, picnic spots"
-                value={formData.foodPreference}
-                onChange={handleInputChange}
-              />
-            </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="distance">
+                    How far are you willing to travel?
+                  </label>
+                  <input
+                    type="text"
+                    id="distance"
+                    name="distance"
+                    placeholder="e.g. 1 hour by train or 50 miles"
+                    value={formData.distance}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="terrain">
+                    What type of terrain do you prefer?
+                  </label>
+                  <select
+                    id="terrain"
+                    name="terrain"
+                    value={formData.terrain}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select terrain type</option>
+                    <option value="woodland">Woodland</option>
+                    <option value="hills">Hills</option>
+                    <option value="coast">Coast</option>
+                    <option value="mixed">Mixed</option>
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="vibe">Vibe of the Hike</label>
+                  <select
+                    id="vibe"
+                    name="vibe"
+                    value={formData.vibe}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select the vibe you want</option>
+                    {vibeTypes.map((vibe) => (
+                      <option key={vibe} value={vibe}>
+                        {vibe}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="foodPreference">
+                    Any food or coffee preferences?
+                  </label>
+                  <input
+                    type="text"
+                    id="foodPreference"
+                    name="foodPreference"
+                    placeholder="e.g. Pub lunch, coffee shop, picnic spots"
+                    value={formData.foodPreference}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </>
+            )}
 
             <div className={styles.buttonContainer}>
               <div className={styles.mainButtons}>
@@ -324,16 +421,13 @@ export default function Home() {
                   type="submit"
                   className={styles.button}
                   disabled={loading}
+                  onClick={surpriseMode ? handleSurpriseMe : undefined}
                 >
-                  {loading ? "Finding your perfect hike..." : "Find My Hike"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSurpriseMe}
-                  className={styles.surpriseButton}
-                  disabled={loading}
-                >
-                  {loading ? "Generating..." : "Surprise Me!"}
+                  {loading
+                    ? "Finding your perfect hike..."
+                    : surpriseMode
+                    ? "Surprise Me!"
+                    : "Find My Hike"}
                 </button>
               </div>
               <button
@@ -377,17 +471,40 @@ export default function Home() {
                 <div className={styles.responseSection}>
                   <h3>📍 Location</h3>
                   <p>{hikeResponse.location}</p>
-                  <a
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(
-                      hikeResponse.location
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.mapsLink}
-                  >
-                    <span>🗺️</span>
-                    <span>View on Google Maps</span>
-                  </a>
+                  {hikeResponse.carpark && (
+                    <div className={styles.locationLink}>
+                      <h4>🅿️ Carpark</h4>
+                      <p>{hikeResponse.carpark.description}</p>
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(
+                          hikeResponse.carpark.description
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.mapsLink}
+                      >
+                        <span>🗺️</span>
+                        <span>View Carpark on Google Maps</span>
+                      </a>
+                    </div>
+                  )}
+                  {hikeResponse.trailhead && (
+                    <div className={styles.locationLink}>
+                      <h4>🥾 Trailhead</h4>
+                      <p>{hikeResponse.trailhead.description}</p>
+                      <a
+                        href={`https://www.google.com/maps/search/${encodeURIComponent(
+                          hikeResponse.trailhead.description
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.mapsLink}
+                      >
+                        <span>🗺️</span>
+                        <span>View Trailhead on Google Maps</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
                 {hikeResponse.weather && (
                   <div className={styles.responseSection}>
